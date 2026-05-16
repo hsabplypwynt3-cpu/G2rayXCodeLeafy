@@ -35,7 +35,7 @@ https://raw.githubusercontent.com/Code-Leafy/G2rayXCodeLeafy/main/configs.txt
 ---
 
 ## 📖 Tutorial & Disclaimer
-👉[**Click here for the Step-by-Step Tutorial**](https://t.me/CodeLeafy/13)
+👉[**Click here for the Step-by-Step Tutorial**](https://t.me/CodeLeafy/15)
 
 > [!IMPORTANT]
 > **Disclaimer:** This project is provided for educational and research purposes only. The developer does not encourage or condone the use of this software for bypassing network restrictions in violation of local laws. Users are solely responsible for their actions and compliance with all applicable regulations in their region. The developer is not responsible for any misuse of this tool.
