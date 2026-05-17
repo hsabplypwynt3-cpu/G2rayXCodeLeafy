@@ -8,7 +8,6 @@
 
 <br/>
 
-<!-- 🎬 TUTORIAL VIDEO - TOP PRIORITY -->
 ## 🎬 Quick Start Tutorial
 
 https://github.com/user-attachments/assets/79174a4a-ef86-4c1d-9f1a-909d0b29a248
@@ -136,8 +135,6 @@ G2rayXCodeLeafy/
 <div align="center">
 
 [![Telegram Channel](https://img.shields.io/badge/Telegram-Join_Channel-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/codeleafy)
-[![GitHub Issues](https://img.shields.io/badge/GitHub-Report_Issue-blue?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Code-Leafy/G2ray-Panel/issues)
-[![Discussions](https://img.shields.io/badge/GitHub-Discussions-purple?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Code-Leafy/G2ray-Panel/discussions)
 
 💬 Get updates, tips, troubleshooting help, and connect with other users!
 
