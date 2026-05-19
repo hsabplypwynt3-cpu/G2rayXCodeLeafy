@@ -420,7 +420,7 @@ JSONEOF
 generate_link() {
     local UUID=$(cat "$UUID_FILE" 2>/dev/null || echo "")
     [ -z "$UUID" ] && { echo ""; return 1; }
-    echo "vless://${UUID}@94.130.13.19:${XRAY_PORT}?encryption=none&security=tls&sni=${PORT_DOMAIN}&fp=chrome&alpn=h2&insecure=1&allowInsecure=1&type=xhttp&host=${PORT_DOMAIN}&path=%2F&mode=packet-up#G2rayXCodeLeafy"
+    echo "vless://${UUID}@94.130.13.19:${XRAY_PORT}?encryption=none&security=tls&sni=${PORT_DOMAIN}&fp=chrome&alpn=h2&insecure=1&allowInsecure=1&type=xhttp&host=${PORT_DOMAIN}&path=%2F&mode=packet-up#G2rayXCodeLeafy|${GITHUB_USER:-User}"
 }
 
 do_donate_config() {
