@@ -1,22 +1,56 @@
 FROM debian:bookworm-slim
 
 LABEL maintainer="G2rayXCodeLeafy" \
-      description="Made By CodeLeafy"
+      description="G2Leafy - VLESS panel by CodeLeafy (Python curses engine)"
 
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    TERM=xterm-256color \
+    PYTHONUNBUFFERED=1
+
+# ---------------------------------------------------------------------------
+# System packages
+#   - python3            : the panel engine (g2leafy.py)
+#   - procps  (pgrep/pkill), psmisc (fuser)  : xray cleanup + port freeing
+#   - iproute2 (ss), net-tools               : connection / port checking
+#   - qrencode, jq, curl, wget, unzip        : QR + config + downloads
+#   - libcap2-bin (setcap)                   : let xray bind :443 as non-root
+#   - locales                                : proper UTF-8 box/line drawing
+#   - gh                                     : Codespace port visibility + keepalive
+# ---------------------------------------------------------------------------
 RUN apt-get update && apt-get install -y --no-install-recommends \
         bash curl wget unzip ca-certificates sudo openssl uuid-runtime tmux tzdata \
         qrencode jq vnstat bc net-tools gnupg libcap2-bin iproute2 \
-    && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+        procps psmisc locales \
+        python3 python3-venv \
+    && sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+    && locale-gen \
+    && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+        | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
     && chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+        > /etc/apt/sources.list.d/github-cli.list \
     && apt-get update && apt-get install -y --no-install-recommends gh \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN wget -qO xray.zip "https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip" \
-    && unzip -q xray.zip -d /tmp/xray-dir \
+# ---------------------------------------------------------------------------
+# Xray-core (auto-detect arch: amd64 -> 64, arm64 -> arm64-v8a)
+# Grant CAP_NET_BIND_SERVICE so it can listen on :443 without root.
+# ---------------------------------------------------------------------------
+RUN set -eux; \
+    case "$(dpkg --print-architecture)" in \
+        amd64) XR="Xray-linux-64.zip" ;; \
+        arm64) XR="Xray-linux-arm64-v8a.zip" ;; \
+        *) XR="Xray-linux-64.zip" ;; \
+    esac; \
+    wget -qO /tmp/xray.zip "https://github.com/XTLS/Xray-core/releases/latest/download/${XR}" \
+    && unzip -q /tmp/xray.zip -d /tmp/xray-dir \
     && mv /tmp/xray-dir/xray /usr/local/bin/xray \
     && mv /tmp/xray-dir/*.dat /usr/local/bin/ \
     && chmod +x /usr/local/bin/xray \
-    && rm -rf xray.zip /tmp/xray-dir
+    && setcap 'cap_net_bind_service=+ep' /usr/local/bin/xray \
+    && rm -rf /tmp/xray.zip /tmp/xray-dir
 
-EXPOSE 443
+# VLESS inbound (443) and subscription server (8080)
+EXPOSE 443 8080
